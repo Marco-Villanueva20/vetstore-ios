@@ -33,6 +33,7 @@ struct Routes {
         case .homeADetallePedidoCar:
             viewController.performSegue(withIdentifier: "homeADetallePedidoCar", sender: nil)
         case .detallePedidoCarAFinalizarPedido:
+            viewController.performSegue(withIdentifier: "detallePedidoCarAFinalizarPedido", sender: nil)
         }
     }
 }

@@ -13,7 +13,7 @@
         <!--Login View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController storyboardIdentifier="LoginViewController" id="BYZ-38-t0r" customClass="LoginViewController" customModule="vet_store" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="LoginViewController" customModule="vet_store" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -107,7 +107,7 @@
         <!--Registro View Controller-->
         <scene sceneID="xhE-eG-9Nz">
             <objects>
-                <viewController storyboardIdentifier="RegistroViewController" modalPresentationStyle="fullScreen" id="Z54-kf-Scd" customClass="RegistroViewController" customModule="vet_store" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController modalPresentationStyle="fullScreen" id="Z54-kf-Scd" customClass="RegistroViewController" customModule="vet_store" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="L8g-Eh-hr5">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -305,7 +305,7 @@
         <!--Clientes View Controller-->
         <scene sceneID="g3a-0s-pCw">
             <objects>
-                <viewController id="kAW-92-AO6" customClass="ClientesViewController" customModule="vet_store" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ClientesViewController" id="kAW-92-AO6" customClass="ClientesViewController" customModule="vet_store" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="T2E-Yt-VbZ">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -641,7 +641,7 @@
         <!--Home View Controller-->
         <scene sceneID="VgV-ge-ZhN">
             <objects>
-                <viewController storyboardIdentifier="ViewController" modalPresentationStyle="fullScreen" id="BBn-Fc-2ID" customClass="HomeViewController" customModule="vet_store" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="HomeViewController" modalPresentationStyle="fullScreen" id="BBn-Fc-2ID" customClass="HomeViewController" customModule="vet_store" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ZaA-VZ-CSr">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -684,13 +684,6 @@
                                             </attributedString>
                                         </buttonConfiguration>
                                     </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Bienvenid@, Random" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" showsExpansionTextWhenTruncated="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bnw-qo-Eag">
-                                        <rect key="frame" x="189" y="60" width="200" height="21"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jfB-TE-UuE">
                                         <rect key="frame" x="30" y="122" width="313" height="35"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -702,6 +695,13 @@
                                         <rect key="frame" x="43" y="45" width="63" height="79"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Bienvenid@, Random" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" showsExpansionTextWhenTruncated="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bnw-qo-Eag">
+                                        <rect key="frame" x="132" y="90" width="245" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" systemColor="viewFlipsideBackgroundColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
@@ -753,12 +753,13 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <connections>
+                        <outlet property="lblBienvenida" destination="Bnw-qo-Eag" id="7eW-Jq-Qd3"/>
                         <segue destination="247-9b-sXc" kind="show" identifier="homeADetallePedidoCar" id="Kyo-9d-cNL"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fNt-Ku-2yj" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="135" y="-632"/>
+            <point key="canvasLocation" x="133.58778625954199" y="-632.3943661971831"/>
         </scene>
         <!--Finalizar Pedido View Controller-->
         <scene sceneID="uIZ-4T-uMm">
@@ -910,7 +911,7 @@
         <!--Pedidos View Controller-->
         <scene sceneID="nmB-Iw-m0k">
             <objects>
-                <viewController id="GIc-Nh-pCf" customClass="PedidosViewController" customModule="vet_store" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PedidosViewController" id="GIc-Nh-pCf" customClass="PedidosViewController" customModule="vet_store" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="6wh-A9-siW">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1049,6 +1050,9 @@
         </systemColor>
         <systemColor name="systemYellowColor">
             <color red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="viewFlipsideBackgroundColor">
+            <color red="0.12156862745098039" green="0.12941176470588237" blue="0.14117647058823529" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

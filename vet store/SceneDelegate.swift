@@ -6,50 +6,70 @@
 //
 
 import UIKit
+import Supabase
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
+    let supabase = SupabaseManager.shared.client
+    
+    func checkUserLoggedIn() async -> Bool {
+        do {
+            // Esto intenta recuperar la sesión del servidor
+            let session = try await supabase.auth.session
+            let user = session.user
+            print("Usuario logueado: \(user.email ?? "sin email")")
+            return true
+        } catch {
+            // Si no hay sesión o cualquier error
+            print("No hay usuario logueado o error: \(error)")
+            return false
+        }
+    }
+    // Función para crear tu TabBar con 3 pestañas
+        func createTabBarController(storyboard: UIStoryboard) -> UITabBarController {
+            let homeVC = storyboard.instantiateViewController(identifier: "HomeViewController") as! HomeViewController
+            homeVC.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house.fill"), tag: 0)
+            let nav1 = UINavigationController(rootViewController: homeVC)
+            
+            let pedidosVC = storyboard.instantiateViewController(identifier: "PedidosViewController") as! PedidosViewController
+            pedidosVC.tabBarItem = UITabBarItem(title: "Pedidos", image: UIImage(systemName: "cart.fill"), tag: 1)
+            let nav2 = UINavigationController(rootViewController: pedidosVC)
+            
+            let clientesVC = storyboard.instantiateViewController(identifier: "ClientesViewController") as! ClientesViewController
+            clientesVC.tabBarItem = UITabBarItem(title: "Clientes", image: UIImage(systemName: "person.2.fill"), tag: 2)
+            let nav3 = UINavigationController(rootViewController: clientesVC)
+            
+            let tabBarController = UITabBarController()
+            tabBarController.viewControllers = [nav1, nav2, nav3]
+            return tabBarController
+        }
+
+
+
+    
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+        
         guard let windowScene = (scene as? UIWindowScene) else { return }
-        
-        window = UIWindow(windowScene: windowScene)
-
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-
-        // Home
-        let homeVC = storyboard.instantiateViewController(identifier: "ViewController") as! ViewController
-        homeVC.tabBarItem = UITabBarItem(title: "Home",
-                                         image: UIImage(systemName: "house.fill"),
-                                         tag: 0)
-
-        // Login
-        let loginVC = storyboard.instantiateViewController(identifier: "LoginViewController") as! LoginViewController
-        loginVC.tabBarItem = UITabBarItem(title: "Pedidos",
-                                          image: UIImage(systemName: "cart.fill"),
-                                          tag: 1)
-
-        // Registro
-        let registroVC = storyboard.instantiateViewController(identifier: "RegistroViewController") as! RegistroViewController
-        registroVC.tabBarItem = UITabBarItem(title: "Clientes",
-                                             image: UIImage(systemName: "person.2.fill"),
-                                             tag: 2)
-
-        // NavigationControllers
-        let nav1 = UINavigationController(rootViewController: homeVC)
-        let nav2 = UINavigationController(rootViewController: loginVC)
-        let nav3 = UINavigationController(rootViewController: registroVC)
-
-        // TabBarController
-        let tabBarController = UITabBarController()
-        tabBarController.viewControllers = [nav1, nav2, nav3]
-
-        // Mostrar
-        window?.rootViewController = tabBarController
-        window?.makeKeyAndVisible()
-        
+                window = UIWindow(windowScene: windowScene)
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                
+                // Verifica usuario async
+                Task {
+                    let loggedIn = await checkUserLoggedIn()
+                    
+                    if loggedIn {
+                        window?.rootViewController = createTabBarController(storyboard: storyboard)
+                    } else {
+                        let loginVC = storyboard.instantiateViewController(identifier: "LoginViewController") as! LoginViewController
+                        let navLogin = UINavigationController(rootViewController: loginVC)
+                        window?.rootViewController = navLogin
+                    }
+                    
+                    window?.makeKeyAndVisible()
+                }
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
