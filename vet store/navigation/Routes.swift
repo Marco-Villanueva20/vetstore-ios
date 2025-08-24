@@ -1,26 +1,38 @@
 import UIKit
 
 enum Route {
-    case registroALogin
-    case homeADetalle
+    //login
     case loginARegistro
     case loginAHome
-    // agrega más rutas aquí
+    
+    //registro
+    case registroALogin
+
+    //pedidos
+    case pedidosADetallePedido
+    case detallePedidoAModificarDatos
+    //home
+    case homeADetallePedidoCar
+    case detallePedidoCarAFinalizarPedido
+
 }
 
 struct Routes {
     static func navigate(to route: Route, from viewController: UIViewController) {
         switch route {
-        case .registroALogin:
-            viewController.performSegue(withIdentifier: "navegarRegistroALogin", sender: nil)
-        case .homeADetalle:
-            viewController.performSegue(withIdentifier: "navegarHomeADetalle", sender: nil)
         case .loginARegistro:
-            viewController.performSegue(withIdentifier: "navegarLoginARegistro", sender: nil)
-            
+            viewController.performSegue(withIdentifier: "loginARegistro", sender: nil)
         case .loginAHome:
-            viewController.performSegue(withIdentifier: "navegarLoginAHome", sender: nil)
-            
+            viewController.performSegue(withIdentifier: "loginAHome", sender: nil)
+        case .registroALogin:
+            viewController.performSegue(withIdentifier: "registroALogin", sender: nil)
+        case .pedidosADetallePedido:
+            viewController.performSegue(withIdentifier: "pedidosADetallePedido", sender: nil)
+        case .detallePedidoAModificarDatos:
+            viewController.performSegue(withIdentifier: "detallePedidoAModificarDatos", sender: nil)
+        case .homeADetallePedidoCar:
+            viewController.performSegue(withIdentifier: "homeADetallePedidoCar", sender: nil)
+        case .detallePedidoCarAFinalizarPedido:
         }
     }
 }

@@ -17,14 +17,8 @@ class RegistroViewController: UIViewController {
     @IBOutlet weak var txtContrasena: UITextField!
     @IBOutlet weak var txtConfirmarContrasena: UITextField!
     
-    
-    
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
     }
     
 
@@ -42,9 +36,6 @@ class RegistroViewController: UIViewController {
                    // Llamamos a tu servicio
                    let response = try await usuarioService.create(usuario)!
                    
-                   print("✅ Usuario creado: \(response.nombre) - \(response.correo)")
-                   
-                   
                    Routes.navigate(to: .loginAHome, from: self)
                    
                } catch {
@@ -58,6 +49,7 @@ class RegistroViewController: UIViewController {
     
     
     @IBAction func btnVolver(_ sender: UIButton) {
+        dismiss(animated: true)
     }
     
 

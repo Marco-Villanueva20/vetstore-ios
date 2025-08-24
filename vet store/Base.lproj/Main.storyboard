@@ -97,7 +97,7 @@
                     <connections>
                         <outlet property="txtContrasena" destination="cHZ-eI-njk" id="1X2-wR-EZo"/>
                         <outlet property="txtCorreo" destination="4Mf-QC-UeV" id="6lw-FV-b4k"/>
-                        <segue destination="Z54-kf-Scd" kind="show" identifier="navegarDeLoginARegistro" id="ego-Di-VX2"/>
+                        <segue destination="Z54-kf-Scd" kind="show" identifier="loginARegistro" id="ego-Di-VX2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -107,9 +107,9 @@
         <!--Registro View Controller-->
         <scene sceneID="xhE-eG-9Nz">
             <objects>
-                <viewController storyboardIdentifier="RegistroViewController" id="Z54-kf-Scd" customClass="RegistroViewController" customModule="vet_store" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="RegistroViewController" modalPresentationStyle="fullScreen" id="Z54-kf-Scd" customClass="RegistroViewController" customModule="vet_store" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="L8g-Eh-hr5">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="783"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="circulo-login" translatesAutoresizingMaskIntoConstraints="NO" id="tgv-lW-7RO">
@@ -211,12 +211,12 @@
             </objects>
             <point key="canvasLocation" x="897" y="68"/>
         </scene>
-        <!--View Controller-->
+        <!--Detalle Pedido Car View Controller-->
         <scene sceneID="bau-lR-QQV">
             <objects>
-                <viewController id="247-9b-sXc" sceneMemberID="viewController">
+                <viewController id="247-9b-sXc" customClass="DetallePedidoCarViewController" customModule="vet_store" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="vUk-XU-rn6">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="783"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="DETALLE DEL PEDIDO" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oo9-6U-Vo8">
@@ -293,15 +293,19 @@
                         <viewLayoutGuide key="safeArea" id="k6w-iw-9aw"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
+                    <navigationItem key="navigationItem" id="M1O-Vr-1V8"/>
+                    <connections>
+                        <segue destination="mHO-Zw-5je" kind="show" identifier="detallePedidoCarAFinalizarPedido" id="niu-0M-iRR"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uDz-Lb-udD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="897" y="-632"/>
         </scene>
-        <!--View Controller-->
+        <!--Clientes View Controller-->
         <scene sceneID="g3a-0s-pCw">
             <objects>
-                <viewController id="kAW-92-AO6" sceneMemberID="viewController">
+                <viewController id="kAW-92-AO6" customClass="ClientesViewController" customModule="vet_store" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="T2E-Yt-VbZ">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -378,12 +382,12 @@
             </objects>
             <point key="canvasLocation" x="134" y="-1373"/>
         </scene>
-        <!--View Controller-->
+        <!--Detalle Pedido View Controller-->
         <scene sceneID="JeV-Ya-qKY">
             <objects>
-                <viewController id="ySg-tg-whJ" sceneMemberID="viewController">
+                <viewController id="ySg-tg-whJ" customClass="DetallePedidoViewController" customModule="vet_store" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="36Y-0z-ET4">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="783"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="DETALLE DEL PEDIDO" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7cy-b6-pI3">
@@ -531,17 +535,21 @@
                         <viewLayoutGuide key="safeArea" id="dpR-nX-J5U"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
+                    <navigationItem key="navigationItem" id="f76-H9-ug3"/>
+                    <connections>
+                        <segue destination="o3o-1u-1Q8" kind="show" identifier="detallePedidoAModificarDatos" id="lxL-Vk-b7X"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4J9-DB-MSl" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="896.94656488549617" y="-1373.2394366197184"/>
         </scene>
-        <!--View Controller-->
+        <!--Modificar Datos View Controller-->
         <scene sceneID="oN3-2I-QOo">
             <objects>
-                <viewController id="o3o-1u-1Q8" sceneMemberID="viewController">
+                <viewController id="o3o-1u-1Q8" customClass="ModificarDatosViewController" customModule="vet_store" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="gZQ-2x-w5M">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="783"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="MODIFICAR DATOS" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ME7-1q-StQ">
@@ -624,15 +632,16 @@
                         <viewLayoutGuide key="safeArea" id="8Iy-nC-2aK"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
+                    <navigationItem key="navigationItem" id="WOh-wW-gfO"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hV1-ef-URY" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1655.7251908396945" y="-1373.2394366197184"/>
         </scene>
-        <!--View Controller-->
+        <!--Home View Controller-->
         <scene sceneID="VgV-ge-ZhN">
             <objects>
-                <viewController storyboardIdentifier="ViewController" modalPresentationStyle="fullScreen" id="BBn-Fc-2ID" customClass="ViewController" customModule="vet_store" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ViewController" modalPresentationStyle="fullScreen" id="BBn-Fc-2ID" customClass="HomeViewController" customModule="vet_store" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ZaA-VZ-CSr">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -743,17 +752,20 @@
                         <viewLayoutGuide key="safeArea" id="Llf-FL-iy0"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
+                    <connections>
+                        <segue destination="247-9b-sXc" kind="show" identifier="homeADetallePedidoCar" id="Kyo-9d-cNL"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fNt-Ku-2yj" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="135" y="-632"/>
         </scene>
-        <!--View Controller-->
+        <!--Finalizar Pedido View Controller-->
         <scene sceneID="uIZ-4T-uMm">
             <objects>
-                <viewController id="mHO-Zw-5je" sceneMemberID="viewController">
+                <viewController id="mHO-Zw-5je" customClass="FinalizarPedidoViewController" customModule="vet_store" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ofR-EG-Ea3">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="783"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="FINALIZAR PEDIDO" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PmD-5J-KVN">
@@ -889,15 +901,16 @@
                         <viewLayoutGuide key="safeArea" id="xob-wy-Vjv"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
+                    <navigationItem key="navigationItem" id="BFt-l8-7IL"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ixw-Mg-g7z" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1656" y="-632"/>
         </scene>
-        <!--View Controller-->
+        <!--Pedidos View Controller-->
         <scene sceneID="nmB-Iw-m0k">
             <objects>
-                <viewController id="GIc-Nh-pCf" sceneMemberID="viewController">
+                <viewController id="GIc-Nh-pCf" customClass="PedidosViewController" customModule="vet_store" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="6wh-A9-siW">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1014,6 +1027,9 @@
                         <viewLayoutGuide key="safeArea" id="nUv-sn-nqe"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
+                    <connections>
+                        <segue destination="ySg-tg-whJ" kind="show" identifier="pedidosADetallePedido" id="x9f-sf-jJc"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="p8M-pP-IF7" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

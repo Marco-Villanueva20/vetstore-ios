@@ -1,10 +1,3 @@
-//
-//  LoginViewController.swift
-//  vet store
-//
-//  Created by Jacktter on 24/08/25.
-//
-
 import UIKit
 
 class LoginViewController: UIViewController {
@@ -12,17 +5,10 @@ class LoginViewController: UIViewController {
     let usuarioService = UsuarioService()
 
     @IBOutlet weak var txtCorreo: UITextField!
-    
     @IBOutlet weak var txtContrasena: UITextField!
-    
-    
-    
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
     }
 
     
@@ -45,13 +31,9 @@ class LoginViewController: UIViewController {
         }
     
     @IBAction func btnRegistro(_ sender: UIButton) {
-        performSegue(withIdentifier: "navegarDeLoginARegistro", sender: nil)
+        Routes.navigate(to: .loginARegistro, from: self)
     }
     
-    
-    
-    
-
     func leerCorreo() -> String {
         return txtCorreo.text ?? ""
     }
