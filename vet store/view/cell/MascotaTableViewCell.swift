@@ -8,7 +8,10 @@
 import UIKit
 
 class MascotaTableViewCell: UITableViewCell {
-
+    @IBOutlet weak var lblRaza: UILabel!
+    @IBOutlet weak var lblPrecio: UILabel!
+    @IBOutlet weak var ivFoto: UIImageView!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -16,8 +19,6 @@ class MascotaTableViewCell: UITableViewCell {
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
     }
 
 }

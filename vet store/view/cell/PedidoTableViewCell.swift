@@ -8,7 +8,15 @@
 import UIKit
 
 class PedidoTableViewCell: UITableViewCell {
-
+    
+    weak var delegate: PedidoTableViewCellDelegate?
+    
+    @IBOutlet weak var lblCodigo: UILabel!
+    @IBOutlet weak var lblRaza: UILabel!
+    @IBOutlet weak var lblPrecio: UILabel!
+    
+    @IBOutlet weak var ivFoto: UIImageView!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -19,5 +27,12 @@ class PedidoTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
+    @IBAction func btnVerDetalles(_ sender: UIButton) {
+        delegate?.didTapComprar(in: self)
+    }
+    
+}
 
+protocol PedidoTableViewCellDelegate: AnyObject {
+    func didTapComprar(in cell: PedidoTableViewCell)
 }

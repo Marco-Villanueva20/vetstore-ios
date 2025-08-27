@@ -8,13 +8,13 @@
 import UIKit
 
 class DetallePedidoCarViewController: UIViewController {
+    
+    var mascota:Mascota!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         // Do any additional setup after loading the view.
     }
-    
 
     /*
     // MARK: - Navigation

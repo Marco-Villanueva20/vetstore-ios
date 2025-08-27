@@ -37,8 +37,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             pedidosVC.tabBarItem = UITabBarItem(title: "Pedidos", image: UIImage(systemName: "cart.fill"), tag: 1)
             let nav2 = UINavigationController(rootViewController: pedidosVC)
             
-            let clientesVC = storyboard.instantiateViewController(identifier: "ClientesViewController") as! ClientesViewController
-            clientesVC.tabBarItem = UITabBarItem(title: "Clientes", image: UIImage(systemName: "person.2.fill"), tag: 2)
+            let clientesVC = storyboard.instantiateViewController(identifier: "ReviewViewController") as! ReviewViewController
+            clientesVC.tabBarItem = UITabBarItem(title: "Reseñas", image: UIImage(systemName: "person.2.fill"), tag: 2)
             let nav3 = UINavigationController(rootViewController: clientesVC)
             
             let tabBarController = UITabBarController()

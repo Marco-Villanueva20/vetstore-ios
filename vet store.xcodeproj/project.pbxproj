@@ -13,6 +13,7 @@
 		9A089B5F2E594B9B005F0DEF /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = 9A089B5E2E594B9B005F0DEF /* Storage */; };
 		9A089B612E594E66005F0DEF /* Realtime in Frameworks */ = {isa = PBXBuildFile; productRef = 9A089B602E594E66005F0DEF /* Realtime */; };
 		9A089B642E594F5B005F0DEF /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 9A089B632E594F5B005F0DEF /* Supabase */; };
+		9AFF8F2F2E5E6DF7002B8D89 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 9AFF8F2E2E5E6DF7002B8D89 /* SDWebImage */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +49,7 @@
 				9A089B5F2E594B9B005F0DEF /* Storage in Frameworks */,
 				9A089B5D2E594B9B005F0DEF /* PostgREST in Frameworks */,
 				9A089B642E594F5B005F0DEF /* Supabase in Frameworks */,
+				9AFF8F2F2E5E6DF7002B8D89 /* SDWebImage in Frameworks */,
 				9A089B5B2E594B9B005F0DEF /* Functions in Frameworks */,
 				9A089B612E594E66005F0DEF /* Realtime in Frameworks */,
 				9A089B592E594B9B005F0DEF /* Auth in Frameworks */,
@@ -107,6 +109,7 @@
 				9A089B5E2E594B9B005F0DEF /* Storage */,
 				9A089B602E594E66005F0DEF /* Realtime */,
 				9A089B632E594F5B005F0DEF /* Supabase */,
+				9AFF8F2E2E5E6DF7002B8D89 /* SDWebImage */,
 			);
 			productName = "vet store";
 			productReference = 9A089B1D2E58DD1E005F0DEF /* vet store.app */;
@@ -138,6 +141,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				9A089B572E594B9B005F0DEF /* XCRemoteSwiftPackageReference "supabase-swift" */,
+				9AFF8F2D2E5E6DF7002B8D89 /* XCRemoteSwiftPackageReference "SDWebImage" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 9A089B1E2E58DD1E005F0DEF /* Products */;
@@ -375,6 +379,14 @@
 				minimumVersion = 2.5.1;
 			};
 		};
+		9AFF8F2D2E5E6DF7002B8D89 /* XCRemoteSwiftPackageReference "SDWebImage" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImage";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.21.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -407,6 +419,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 9A089B572E594B9B005F0DEF /* XCRemoteSwiftPackageReference "supabase-swift" */;
 			productName = Supabase;
+		};
+		9AFF8F2E2E5E6DF7002B8D89 /* SDWebImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9AFF8F2D2E5E6DF7002B8D89 /* XCRemoteSwiftPackageReference "SDWebImage" */;
+			productName = SDWebImage;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

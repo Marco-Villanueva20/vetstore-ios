@@ -14,11 +14,14 @@ class UsuarioService {
     
     
     func create(_ usuario: Usuario) async throws -> UsuarioResponse? {
+        let rol = asignarRol(correo: usuario.correo) // 👈 se calcula aquí
+        
         let response = try await supabase.auth.signUp(
             email: usuario.correo,
             password: usuario.contrasena,
             data: [
-                "nombre_completo": .string(usuario.nombre)
+                "nombre_completo": .string(usuario.nombre),
+                "rol": .string(rol) // 👈 se guarda en metadatos
             ]
         )
         
@@ -26,9 +29,11 @@ class UsuarioService {
         
         let nombre = user.userMetadata["nombre_completo"]?.stringValue ?? "Sin nombre"
         let correo = user.email ?? "Correo no disponible"
+        let rolObtenido = user.userMetadata["rol"]?.stringValue ?? "cliente"
         
-        return UsuarioResponse(nombre: nombre, correo: correo, status: 200)
+        return UsuarioResponse(nombre: nombre, correo: correo, rol: rolObtenido, status: 200)
     }
+
 
     
     func login(_ usuarioRequest: UsuarioRequest) async throws -> Session {
@@ -38,4 +43,12 @@ class UsuarioService {
            )
            return session
        }
+    
+    private func asignarRol(correo: String) -> String {
+        if correo.lowercased().hasSuffix("@admin.com") {
+            return "administrador"
+        } else {
+            return "cliente"
+        }
+    }
 }

@@ -7,23 +7,54 @@
 
 import UIKit
 
-class PedidosViewController: UIViewController {
+class PedidosViewController: UIViewController,UITableViewDelegate,UITableViewDataSource {
 
+    
+    @IBOutlet weak var tvPedidos: UITableView!
+    
+    
+    var listaPedidos: [Pedido] = []
+    var pedidoSeleccionado = -1
+    
+   
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        //cargarPedidos()
+        tvPedidos.reloadData()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        tvPedidos.delegate = self
+        tvPedidos.dataSource = self
+        tvPedidos.rowHeight = 150
         // Do any additional setup after loading the view.
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return listaPedidos.count
     }
-    */
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let celda = tvPedidos.dequeueReusableCell(withIdentifier: "cardPedido") as! PedidoTableViewCell
+    
+      /*  celda.lblRaza.text = "\(listaPedidos[indexPath.row].)"
+        celda.lblComentario.text = "\(listaReviews[indexPath.row].comentario)"
+        
+        if let url = URL(string: listaReviews[indexPath.row].foto) {
+            celda.ivFoto.sd_setImage(
+                with: url,
+                placeholderImage: UIImage(named: "producto_icon") // opcional
+            )
+        }
+        
+        */
+        return celda
+        
+    }
+
+    
 
 }

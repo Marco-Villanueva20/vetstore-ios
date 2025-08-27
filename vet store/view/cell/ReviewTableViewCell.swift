@@ -8,11 +8,11 @@
 
 import UIKit
 
-class ClienteTableViewCell: UITableViewCell {
+class ReviewTableViewCell: UITableViewCell {
 
     
     @IBOutlet weak var ivFoto: UIImageView!
-    @IBOutlet weak var lblExperiencias: UILabel!
+    @IBOutlet weak var lblComentario: UILabel!
     @IBOutlet weak var lblNombre: UILabel!
     
     override func awakeFromNib() {

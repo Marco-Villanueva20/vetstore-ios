@@ -7,5 +7,6 @@
 struct UsuarioResponse{
     var nombre: String
     var correo: String
+    var rol: String
     var status: Int
 }

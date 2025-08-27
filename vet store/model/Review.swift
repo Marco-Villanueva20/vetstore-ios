@@ -7,6 +7,10 @@
 
 import UIKit
 
-class Review: NSObject {
+struct Review {
 
+    var codigo: Int16
+    var nombre: String
+    var comentario: String
+    var foto: String
 }

@@ -8,7 +8,7 @@
 import UIKit
 
 struct Mascota{
-    var id: Int16
+    var codigo: Int16
     var raza: String
     var precio: Double
     var foto: String

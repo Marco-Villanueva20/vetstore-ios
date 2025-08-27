@@ -8,10 +8,7 @@
 import UIKit
 
 struct Pedido {
-    var id: Int16
+    var codigo: Int16
     var cantidad: Int16
     var precioTotal: Double
-
-    var mascotaId: Int?
-    
 }
