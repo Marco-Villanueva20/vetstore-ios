@@ -7,8 +7,15 @@
 
 import UIKit
 
-class ClientesViewController: UIViewController {
+class ReviewViewController: UIViewController {
 
+    
+    
+    @IBOutlet weak var tblClientes: UITableView!
+    
+    
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
