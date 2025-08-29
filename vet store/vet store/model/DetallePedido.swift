@@ -12,7 +12,10 @@ struct DetallePedido {
     var cantidad: Int16
     var precioTotal: Double
     var genero: String
+    var estado: String?
     
+    var usuarioUuid: String
     var mascota: Mascota?
 }
+
 

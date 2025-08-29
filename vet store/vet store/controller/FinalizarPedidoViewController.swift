@@ -165,6 +165,7 @@ class FinalizarPedidoViewController: UIViewController {
                 alert.addAction(UIAlertAction(title: "Aceptar", style: .default, handler: { _ in
                     // Cierra flow y vuelve al Home
                     self.view.window?.rootViewController?.dismiss(animated: true)
+
                 }))
                 self.present(alert, animated: true)
             } else {
@@ -191,4 +192,22 @@ class FinalizarPedidoViewController: UIViewController {
         
         return Calendar.current.date(from: comps)
     }
+    
+    
+    @IBAction func btnFinalizarMasTarde(_ sender: UIButton) {
+        AlertHelper.showConfirmation(
+               on: self,
+               title: "Finalizar más tarde",
+               message: "¿Estás seguro de que deseas finalizar más tarde?",
+               confirmTitle: "Sí, más tarde",
+               cancelTitle: "No"
+           ) {
+               self.view.window?.rootViewController?.dismiss(animated: true)
+           }
+        
+        
+    }
+    
+    
+    
 }

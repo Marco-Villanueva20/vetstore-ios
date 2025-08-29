@@ -10,70 +10,73 @@ class DetallePedidoService: NSObject {
     }
     
     // CREATE -> lanza PedidoError si algo falla
-       func addPedido(pedido: DetallePedido) throws -> DetallePedido {
-           // 1) Validación mínima: debe tener mascota asociada
-           guard let mascotaData = pedido.mascota else {
-               throw PedidoError.sinMascota
-           }
+    func addPedido(pedido: DetallePedido) throws -> DetallePedido {
+        // 1) Validación mínima: debe tener mascota asociada
+        guard let mascotaData = pedido.mascota else {
+            throw PedidoError.sinMascota
+        }
 
-           // 2) Buscar MascotaEntity en Core Data por código
-           let requestMascota: NSFetchRequest<MascotaEntity> = MascotaEntity.fetchRequest()
-           requestMascota.predicate = NSPredicate(format: "codigo == %d", mascotaData.codigo)
+        // 2) Buscar MascotaEntity en Core Data por código
+        let requestMascota: NSFetchRequest<MascotaEntity> = MascotaEntity.fetchRequest()
+        requestMascota.predicate = NSPredicate(format: "codigo == %d", mascotaData.codigo)
 
-           do {
-               guard let mascotaExistente = try contextoBD.fetch(requestMascota).first else {
-                   throw PedidoError.mascotaNoEncontrada(mascotaData.codigo)
-               }
+        do {
+            guard let mascotaExistente = try contextoBD.fetch(requestMascota).first else {
+                throw PedidoError.mascotaNoEncontrada(mascotaData.codigo)
+            }
 
-               // 3) Validar stock según género
-               let genero = pedido.genero.capitalized
-               let cantidadPedidoInt = Int(pedido.cantidad)
+            // 3) Validar stock según género
+            let genero = pedido.genero.capitalized
+            let cantidadPedidoInt = Int(pedido.cantidad)
 
-               if genero == "Macho" {
-                   let stockMachos = Int(mascotaExistente.cantidad_machos)
-                   if cantidadPedidoInt > stockMachos {
-                       throw PedidoError.stockInsuficiente("No puedes pedir más machos de los que hay en stock (\(stockMachos)).")
-                   }
-               } else if genero == "Hembra" {
-                   let stockHembras = Int(mascotaExistente.cantidad_hembras)
-                   if cantidadPedidoInt > stockHembras {
-                       throw PedidoError.stockInsuficiente("No puedes pedir más hembras de las que hay en stock (\(stockHembras)).")
-                   }
-               } else {
-                   throw PedidoError.generoInvalido
-               }
+            if genero == "Macho" {
+                let stockMachos = Int(mascotaExistente.cantidad_machos)
+                if cantidadPedidoInt > stockMachos {
+                    throw PedidoError.stockInsuficiente("No puedes pedir más machos de los que hay en stock (\(stockMachos)).")
+                }
+            } else if genero == "Hembra" {
+                let stockHembras = Int(mascotaExistente.cantidad_hembras)
+                if cantidadPedidoInt > stockHembras {
+                    throw PedidoError.stockInsuficiente("No puedes pedir más hembras de las que hay en stock (\(stockHembras)).")
+                }
+            } else {
+                throw PedidoError.generoInvalido
+            }
 
-               // 4) Crear DetallePedidoEntity y asignar relación
-               let entity = DetallePedidoEntity(context: contextoBD)
-               entity.codigo = try CoreDataHelper.generarNuevoCodigo(entidad: "DetallePedidoEntity", context: contextoBD)
-               entity.cantidad = pedido.cantidad
-               entity.precio_total = pedido.precioTotal
-               entity.genero = pedido.genero
-               entity.mascota = mascotaExistente
+            // 4) Crear DetallePedidoEntity y asignar relación
+            let entity = DetallePedidoEntity(context: contextoBD)
+            entity.codigo = try CoreDataHelper.generarNuevoCodigo(entidad: "DetallePedidoEntity", context: contextoBD)
+            entity.cantidad = pedido.cantidad
+            entity.precio_total = pedido.precioTotal
+            entity.genero = pedido.genero
+            entity.mascota = mascotaExistente
+            entity.estado = "pendiente"
+            entity.usuario_uuid = pedido.usuarioUuid
+            
 
-               // 5) Restar stock en la mascota (en el mismo contexto)
-               if genero == "Macho" {
-                   let nuevaCantidad = Int(mascotaExistente.cantidad_machos) - cantidadPedidoInt
-                   mascotaExistente.cantidad_machos = Int16(max(0, nuevaCantidad))
-               } else {
-                   let nuevaCantidad = Int(mascotaExistente.cantidad_hembras) - cantidadPedidoInt
-                   mascotaExistente.cantidad_hembras = Int16(max(0, nuevaCantidad))
-               }
+            // 5) Restar stock en la mascota (en el mismo contexto)
+            if genero == "Macho" {
+                let nuevaCantidad = Int(mascotaExistente.cantidad_machos) - cantidadPedidoInt
+                mascotaExistente.cantidad_machos = Int16(max(0, nuevaCantidad))
+            } else {
+                let nuevaCantidad = Int(mascotaExistente.cantidad_hembras) - cantidadPedidoInt
+                mascotaExistente.cantidad_hembras = Int16(max(0, nuevaCantidad))
+            }
 
-               // 6) Guardar todo en Core Data (transacción atómica)
-               try contextoBD.save()
+            // 6) Guardar todo en Core Data (transacción atómica)
+            try contextoBD.save()
 
-               // 7) Retornar el DetallePedido mapeado
-               return mapEntityToPedido(entity)
+            // 7) Retornar el DetallePedido mapeado
+            return mapEntityToPedido(entity)
 
-           } catch let pedidoError as PedidoError {
-               // Re-lanzamos errores específicos
-               throw pedidoError
-           } catch {
-               // Otros errores (Core Data, etc.)
-               throw PedidoError.persistencia(error.localizedDescription)
-           }
-       }
+        } catch let pedidoError as PedidoError {
+            // Re-lanzamos errores específicos
+            throw pedidoError
+        } catch {
+            // Otros errores (Core Data, etc.)
+            throw PedidoError.persistencia(error.localizedDescription)
+        }
+    }
 
     func obtenerDetallePedidoEntity(codigo: Int16) -> DetallePedidoEntity? {
         let request = DetallePedidoEntity.fetchRequest()
@@ -87,14 +90,12 @@ class DetallePedidoService: NSObject {
         }
     }
 
-
-
     // READ ALL
     func getPedidos() -> [DetallePedido] {
         do {
             let request = DetallePedidoEntity.fetchRequest()
             let entities = try contextoBD.fetch(request)
-            return entities.map { mapEntityToPedido($0) }  // Usar función de mapeo
+            return entities.map { mapEntityToPedido($0) }
         } catch {
             print("Error al obtener pedidos: \(error.localizedDescription)")
             return []
@@ -108,7 +109,7 @@ class DetallePedidoService: NSObject {
         
         do {
             if let entity = try contextoBD.fetch(request).first {
-                return mapEntityToPedido(entity)   // Usar función de mapeo
+                return mapEntityToPedido(entity)
             }
         } catch {
             print("Error al buscar pedido: \(error.localizedDescription)")
@@ -116,8 +117,6 @@ class DetallePedidoService: NSObject {
         return nil
     }
 
-
-    
     // UPDATE
     func updatePedido(pedido: DetallePedido) -> DetallePedido? {
         let request = DetallePedidoEntity.fetchRequest()
@@ -129,6 +128,8 @@ class DetallePedidoService: NSObject {
                 entity.cantidad = pedido.cantidad
                 entity.genero = pedido.genero
                 entity.precio_total = pedido.precioTotal
+                entity.estado = pedido.estado
+                entity.usuario_uuid = pedido.usuarioUuid
                 
                 try contextoBD.save()
                 
@@ -142,7 +143,27 @@ class DetallePedidoService: NSObject {
         return nil
     }
 
-    
+    // GET pendientes (filtrables por usuario)
+    func getPedidosPendientes(forUsuarioUuid uuid: String? = nil) -> [DetallePedido] {
+        let request: NSFetchRequest<DetallePedidoEntity> = DetallePedidoEntity.fetchRequest()
+        var predicates: [NSPredicate] = []
+        // estado pendiente
+        predicates.append(NSPredicate(format: "estado == %@", "pendiente"))
+        // si se pasa uuid, agregar filtro
+        if let u = uuid, !u.isEmpty {
+            predicates.append(NSPredicate(format: "usuario_uuid == %@", u))
+        }
+        request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+        
+        do {
+            let entities = try contextoBD.fetch(request)
+            return entities.map { mapEntityToPedido($0) }
+        } catch {
+            print("Error al obtener pedidos pendientes: \(error.localizedDescription)")
+            return []
+        }
+    }
+
     // DELETE
     func deletePedido(byCodigo codigo: Int16) -> Bool {
         let request = DetallePedidoEntity.fetchRequest()
@@ -159,8 +180,6 @@ class DetallePedidoService: NSObject {
         }
         return false
     }
-    
-    
     
     private func mapEntityToPedido(_ entity: DetallePedidoEntity) -> DetallePedido {
         let mascotaData: Mascota? = {
@@ -182,12 +201,11 @@ class DetallePedidoService: NSObject {
             cantidad: entity.cantidad,
             precioTotal: entity.precio_total,
             genero: entity.genero ?? "",
+            estado: entity.estado ?? "pendiente",
+            usuarioUuid: entity.usuario_uuid ?? "",
             mascota: mascotaData
         )
     }
-    
-   
-
 }
 
 

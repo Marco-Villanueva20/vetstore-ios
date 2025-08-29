@@ -10,6 +10,9 @@ class HomeViewController: UIViewController,UITableViewDelegate,UITableViewDataSo
     var mascotaSeleccionada = -1
     
     
+    
+    
+    
     @IBOutlet weak var txtRazaABuscar: UITextField!
     
     
@@ -62,6 +65,12 @@ class HomeViewController: UIViewController,UITableViewDelegate,UITableViewDataSo
     }
 
 
+    
+    
+    @IBAction func btnPedidosPendientes(_ sender: UIButton) {
+        performSegue(withIdentifier: "homeAPedidosPendientes", sender: nil)
+    }
+    
     
     
     

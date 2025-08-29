@@ -105,6 +105,20 @@ class ModificarDatosViewController: UIViewController {
                }
     }
     
+    @IBAction func btnCancelar(_ sender: UIButton) {
+        AlertHelper.showConfirmation(
+                on: self,
+                title: "Cancelar Modificación de Datos",
+                message: "¿Estás seguro de que deseas cancelar?",
+                confirmTitle: "Sí, cancelar",
+                cancelTitle: "No"
+            ) {
+                // Acción cuando confirma cancelar
+                self.dismiss(animated: true)
+            }
+    }
+    
+    
     func obtenerNombreUsuario() -> String {
         return txtNombreUsuario.text ?? ""
     }

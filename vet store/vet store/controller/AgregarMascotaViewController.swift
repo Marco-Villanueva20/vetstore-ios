@@ -112,8 +112,16 @@ class AgregarMascotaViewController: UIViewController,UIImagePickerControllerDele
     }
     
     @IBAction func btnCancelar(_ sender: UIButton) {
-        dismiss(animated: true)
-    }
-    
+        AlertHelper.showConfirmation(
+                on: self,
+                title: "Cancelar Agregar Mascota",
+                message: "¿Estás seguro de que deseas cancelar?",
+                confirmTitle: "Sí, cancelar",
+                cancelTitle: "No"
+            ) {
+                // Acción cuando confirma cancelar
+                self.dismiss(animated: true)
+            }
+        }
 
 }

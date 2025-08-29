@@ -72,7 +72,8 @@ class DetallePedidoViewController: UIViewController {
             }
         }
 
-    @IBAction func btnCancelar(_ sender: UIButton) {
+    @IBAction func btnVolver(_ sender: UIButton) {
+        dismiss(animated: true)
     }
     
 

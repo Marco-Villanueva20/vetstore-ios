@@ -23,6 +23,7 @@ class DetallePedidoCarViewController: UIViewController {
     
     @IBOutlet weak var txtGeneroPedido: UITextField!
     
+    var usuarioResponse: UsuarioResponse!
     
     
     @IBOutlet weak var ivFoto: UIImageView!
@@ -32,10 +33,10 @@ class DetallePedidoCarViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        
         mostrarDatosMascota()
+        cargarUsuarioResponse() // <- asegura el usuario antes de pedir
     }
+
        
     func mostrarDatosMascota() {
         lblRaza.text = mascota.raza
@@ -81,6 +82,7 @@ class DetallePedidoCarViewController: UIViewController {
                 cantidad: Int16(cantidadInt),
                 precioTotal: obtenerPrecioTotal(),
                 genero: generoValidado,
+                usuarioUuid: usuarioResponse.uuid,
                 mascota: mascota
             )
             
@@ -101,6 +103,22 @@ class DetallePedidoCarViewController: UIViewController {
             }
         }
     }
+    
+    
+    
+    @IBAction func btnCancelar(_ sender: UIButton) {
+        AlertHelper.showConfirmation(
+                on: self,
+                title: "Cancelar pedido",
+                message: "¿Estás seguro de que deseas cancelar este pedido?",
+                confirmTitle: "Sí, cancelar",
+                cancelTitle: "No"
+            ) {
+                // Acción cuando confirma cancelar
+                self.dismiss(animated: true)
+            }
+    }
+    
     
 
         /// Función para mostrar alertas
@@ -142,5 +160,15 @@ class DetallePedidoCarViewController: UIViewController {
     
     func obtenerPrecioTotal() -> Double {
         return Double(leerCantidadPedido()) * leerPrecio()
+    }
+    
+    
+    func cargarUsuarioResponse(){
+        Task {
+            usuarioResponse = await UsuarioService.usuarioLogueado()
+            await MainActor.run {
+                
+            }
+        }
     }
 }

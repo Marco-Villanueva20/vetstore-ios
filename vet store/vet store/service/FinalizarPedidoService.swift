@@ -66,6 +66,7 @@ class FinalizarPedidoService: NSObject {
             // Relación con DetallePedido
             if let detalle = detallePedido {
                 entity.detalle_pedido = detalle
+                detalle.estado = "finalizado"
             } else {
                 print("⚠️ Advertencia: No se asignó detalle_pedido")
             }
