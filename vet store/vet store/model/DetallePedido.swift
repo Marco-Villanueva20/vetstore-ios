@@ -7,8 +7,12 @@
 
 import UIKit
 
-struct Pedido {
-    var codigo: Int16
+struct DetallePedido {
+    var codigo: Int16?
     var cantidad: Int16
     var precioTotal: Double
+    var genero: String
+    
+    var mascota: Mascota?
 }
+

@@ -12,21 +12,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
-    let supabase = SupabaseManager.shared.client
-    
-    func checkUserLoggedIn() async -> Bool {
-        do {
-            // Esto intenta recuperar la sesión del servidor
-            let session = try await supabase.auth.session
-            let user = session.user
-            print("Usuario logueado: \(user.email ?? "sin email")")
-            return true
-        } catch {
-            // Si no hay sesión o cualquier error
-            print("No hay usuario logueado o error: \(error)")
-            return false
-        }
-    }
     // Función para crear tu TabBar con 3 pestañas
         func createTabBarController(storyboard: UIStoryboard) -> UITabBarController {
             let homeVC = storyboard.instantiateViewController(identifier: "HomeViewController") as! HomeViewController
@@ -58,9 +43,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 
                 // Verifica usuario async
                 Task {
-                    let loggedIn = await checkUserLoggedIn()
-                    
-                    if loggedIn {
+                    let isLogin = await UsuarioService.usuarioIsLogin()
+
+                    if isLogin {
                         window?.rootViewController = createTabBarController(storyboard: storyboard)
                     } else {
                         let loginVC = storyboard.instantiateViewController(identifier: "LoginViewController") as! LoginViewController

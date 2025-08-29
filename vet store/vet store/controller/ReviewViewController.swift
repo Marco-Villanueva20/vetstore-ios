@@ -11,7 +11,7 @@ import SDWebImage
 class ReviewViewController: UIViewController,UITableViewDelegate,UITableViewDataSource {
     
     var listaReviews: [Review] = []
-    var previewSeleccionada = -1
+    var reviewSeleccionada = -1
     
    
     
@@ -48,16 +48,12 @@ class ReviewViewController: UIViewController,UITableViewDelegate,UITableViewData
            listaReviews.append(reseñaFake)
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    
+    @IBAction func btnAgregarReview(_ sender: UIButton) {
+        Routes.navigate(to: .reviewAAgregarReview, from: self)
     }
-    */
+    
+    
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return listaReviews.count
@@ -81,19 +77,18 @@ class ReviewViewController: UIViewController,UITableViewDelegate,UITableViewData
         
     }
     
-    /*
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-            pos = indexPath.row
-            performSegue(withIdentifier: "navegarADetalleReseña", sender: nil)
+        reviewSeleccionada = indexPath.row
+        Routes.navigate(to: .reviewADetalleReview, from: self)
         }
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-             if segue.identifier == "navegarADetalleReseña" {
-                 let pantalla2 = segue.destination as! DetalleReseñaViewController
-                 pantalla2.plato = listaPlatos[pos]
+     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+             if segue.identifier == "reviewADetalleReview" {
+                 let detalleReview = segue.destination as! DetalleReviewViewController
+                 detalleReview.review = listaReviews[reviewSeleccionada]
              }
          }
      
-     
-    */
     
 }

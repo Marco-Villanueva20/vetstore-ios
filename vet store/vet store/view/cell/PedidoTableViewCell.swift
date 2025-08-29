@@ -1,10 +1,3 @@
-//
-//  PedidoTableViewCell.swift
-//  vet store
-//
-//  Created by Jacktter on 24/08/25.
-//
-
 import UIKit
 
 class PedidoTableViewCell: UITableViewCell {
@@ -13,7 +6,7 @@ class PedidoTableViewCell: UITableViewCell {
     
     @IBOutlet weak var lblCodigo: UILabel!
     @IBOutlet weak var lblRaza: UILabel!
-    @IBOutlet weak var lblPrecio: UILabel!
+    @IBOutlet weak var lblPrecioTotal: UILabel!
     
     @IBOutlet weak var ivFoto: UIImageView!
     

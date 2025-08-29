@@ -26,23 +26,23 @@ class RegistroViewController: UIViewController {
     
     @IBAction func btnRegistrarse(_ sender: UIButton) {
         Task {
-               do {
-                   let correo = leerCorreo()
-                   let contrasena = leerContrasena()
-                   let nombre = leerNombre()
-                   
-                   let usuario = Usuario(nombre: nombre, correo: correo, contrasena: contrasena)
-                   
-                   // Llamamos a tu servicio
-                   let response = try await usuarioService.create(usuario)!
-                   
-                   Routes.navigate(to: .loginAHome, from: self)
-                   
-               } catch {
-                   print("❌ Error al registrar: \(error.localizedDescription)")
-                  // mostrarAlertaError(mensaje: "No se pudo crear el usuario, revisa los datos.")
-               }
-           }
+                do {
+                    let correo = leerCorreo()
+                    let contrasena = leerContrasena()
+                    let nombre = leerNombre()
+                    
+                    let usuario = Usuario(nombre: nombre, correo: correo, contrasena: contrasena)
+                    
+                    let nuevoUsuario = try await usuarioService.create(usuario)!
+                    print("✅ Usuario creado con nombre: \(nuevoUsuario.nombre)")
+                    
+                    Routes.navigate(to: .registroALogin, from: self)
+                    
+                } catch {
+                    print("❌ Error al registrar: \(error.localizedDescription)")
+                    // mostrarAlertaError(mensaje: "No se pudo crear el usuario, revisa los datos.")
+                }
+            }
         
     }
     

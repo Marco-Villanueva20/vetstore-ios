@@ -1,10 +1,6 @@
-//
-//  UsuarioResponse.swift
-//  vet store
-//
-//  Created by Jacktter on 24/08/25.
-//
+import Foundation
 struct UsuarioResponse{
+    var uuid: String
     var nombre: String
     var correo: String
     var rol: String

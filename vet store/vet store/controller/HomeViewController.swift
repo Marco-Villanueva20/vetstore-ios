@@ -8,19 +8,13 @@
 import UIKit
 
 class HomeViewController: UIViewController,UITableViewDelegate,UITableViewDataSource  {
-    
-
-    let supabase = SupabaseManager.shared.client
-    
     @IBOutlet weak var lblBienvenida: UILabel!
-
     @IBOutlet weak var tvMascotas: UITableView!
+    @IBOutlet weak var btnAgregarMascota: UIButton!
     
-    
+    var usuarioResponse: UsuarioResponse?
     var listaMascotas: [Mascota] = []
     var mascotaSeleccionada = -1
-    
-   
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -29,18 +23,38 @@ class HomeViewController: UIViewController,UITableViewDelegate,UITableViewDataSo
     }
     
     
+    @IBAction func btnCerrarSesion(_ sender: UIButton) {
+        Task{
+            await UsuarioService.cerrarSesion()
+            Routes.navigate(to: .homeALogin, from: self)
+        }
+    }
     
 
     override func viewDidLoad() {
-        
         super.viewDidLoad()
-        imprimirBienvenida()
+        
+        Task {
+            self.usuarioResponse = await UsuarioService.usuarioLogueado()
+            print("Usuario cargado: \(self.usuarioResponse?.nombre ?? "Sin nombre")")
+            
+            // 👇 Ya tengo el usuario, ahora sí imprimo la bienvenida
+            await MainActor.run {
+                self.imprimirBienvenida()
+            }
+        }
         
         tvMascotas.delegate = self
         tvMascotas.dataSource = self
         tvMascotas.rowHeight = 150
     }
+
     
+    
+    
+    @IBAction func btnAgregarMascota(_ sender: UIButton) {
+        Routes.navigate(to: .homeAAgregarMascota, from: self)
+    }
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -70,6 +84,7 @@ class HomeViewController: UIViewController,UITableViewDelegate,UITableViewDataSo
         mascotaSeleccionada = indexPath.row
             performSegue(withIdentifier: "homeADetallePedidoCar", sender: nil)
         }
+    
      override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
              if segue.identifier == "homeADetallePedidoCar" {
                  let detallePedidoCar = segue.destination as! DetallePedidoCarViewController
@@ -88,6 +103,8 @@ class HomeViewController: UIViewController,UITableViewDelegate,UITableViewDataSo
                codigo: 12,
                raza: "Chihuahua",
                precio: 12.0,
+               cantidadMachos: 12,
+               cantidadHembras: 14,
                foto: "https://www.zooplus.pt/magazine/wp-content/uploads/2019/06/Chihuahua.jpg"            )
            
         listaMascotas.append(reseñaFake)
@@ -95,25 +112,39 @@ class HomeViewController: UIViewController,UITableViewDelegate,UITableViewDataSo
     
     
     func imprimirBienvenida() {
-        Task{
-            do {
-                let session = try await supabase.auth.session
-                let user = session.user
-                let nombre = user.userMetadata["nombre_completo"]?.stringValue ?? "Sin nombre"
-                    
-                    // Actualiza la etiqueta en el hilo principal
-                    DispatchQueue.main.async {
-                        self.lblBienvenida.text = "Bienvenido, \(nombre)"
-                    }
-            } catch {
-                print("Error al obtener usuario: \(error)")
-                DispatchQueue.main.async {
-                    self.lblBienvenida.text = "Bienvenido"
-                }
+        Task {
+            let nombre = usuarioResponse?.nombre ?? "Sin nombre"
+            
+            DispatchQueue.main.async {
+                let titulo = "Bienvenid@, "
+                let texto = NSMutableAttributedString(
+                    string: titulo,
+                    attributes: [
+                        .font: UIFont.systemFont(ofSize: 18, weight: .medium),
+                        .foregroundColor: UIColor.white
+                    ]
+                )
+                
+                let nombreAttr = NSAttributedString(
+                    string: nombre,
+                    attributes: [
+                        .font: UIFont.systemFont(ofSize: 20, weight: .bold),
+                        .foregroundColor: UIColor.systemBlue
+                    ]
+                )
+                
+                texto.append(nombreAttr)
+                self.lblBienvenida.attributedText = texto
+                
+                self.lblBienvenida.textAlignment = .center
+                self.lblBienvenida.layer.cornerRadius = 8
+                self.lblBienvenida.layer.masksToBounds = true
+                self.lblBienvenida.layer.borderColor = UIColor.black.cgColor
+                self.lblBienvenida.layer.borderWidth = 1
             }
         }
-        
     }
+
 
     
 

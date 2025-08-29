@@ -1,13 +1,52 @@
 import UIKit
+import Storage
 import CoreData
 
 class MascotaService: NSObject {
     private let contextoBD: NSManagedObjectContext
     
+    private var supabase = SupabaseManager.shared.client
+    
     override init() {
         let delegate = UIApplication.shared.delegate as! AppDelegate
         self.contextoBD = delegate.persistentContainer.viewContext
     }
+    
+    private let bucketName = "mascotas"
+    
+    // SUBIR FOTO A SUPABASE Y OBTENER URL
+        func uploadFotoMascota(fileName: String, image: UIImage, completion: @escaping (Result<String, Error>) -> Void) {
+            guard let imageData = image.pngData() else {
+                completion(.failure(NSError(domain: "MascotaService", code: -1, userInfo: [NSLocalizedDescriptionKey: "No se pudo convertir la imagen a PNG."])))
+                return
+            }
+            
+            // ✅ aseguramos que tenga ".png"
+                let path = fileName.hasSuffix(".png") ? fileName : "\(fileName).png"
+                
+                // ✅ importante: subir dentro de "private/"
+                let storagePath = "private/\(path)"
+            
+            
+            Task {
+                do {
+                    // 1. Subir al bucket
+                    try await supabase.storage.from(bucketName).upload(
+                        storagePath,
+                        data: imageData,
+                        options: FileOptions(
+                            contentType: "image/png",
+                            upsert: false)
+                    )
+                    
+                    // 2. Obtener URL pública
+                    let publicURL = try supabase.storage.from(bucketName).getPublicURL(path: storagePath)
+                    completion(.success(publicURL.absoluteString))
+                } catch {
+                    completion(.failure(error))
+                }
+            }
+        }    
     
     // CREATE
     func addMascota(mascota: Mascota) -> Bool {
@@ -19,6 +58,8 @@ class MascotaService: NSObject {
                 )
                 entity.raza = mascota.raza
                 entity.precio = mascota.precio
+                entity.cantidad_machos = mascota.cantidadMachos
+                entity.cantidad_hembras = mascota.cantidadHembras
                 entity.foto = mascota.foto
                 
                 try contextoBD.save()
@@ -41,6 +82,8 @@ class MascotaService: NSObject {
                     codigo: entity.codigo,
                     raza: entity.raza ?? "",
                     precio: entity.precio,
+                    cantidadMachos: entity.cantidad_machos,
+                    cantidadHembras: entity.cantidad_hembras,
                     foto: entity.foto ?? ""
                 )
             }
@@ -61,6 +104,8 @@ class MascotaService: NSObject {
                     codigo: entity.codigo,
                     raza: entity.raza ?? "",
                     precio: entity.precio,
+                    cantidadMachos: entity.cantidad_machos,
+                    cantidadHembras: entity.cantidad_hembras,
                     foto: entity.foto ?? ""
                 )
             }
@@ -79,6 +124,8 @@ class MascotaService: NSObject {
             if let entity = try contextoBD.fetch(request).first {
                 entity.raza = mascota.raza
                 entity.precio = mascota.precio
+                entity.cantidad_machos = mascota.cantidadMachos
+                entity.cantidad_hembras = mascota.cantidadHembras
                 entity.foto = mascota.foto
                 try contextoBD.save()
                 return true
