@@ -17,23 +17,54 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let homeVC = storyboard.instantiateViewController(identifier: "HomeViewController") as! HomeViewController
             homeVC.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house.fill"), tag: 0)
             let nav1 = UINavigationController(rootViewController: homeVC)
-            
+
             let pedidosVC = storyboard.instantiateViewController(identifier: "PedidosViewController") as! PedidosViewController
             pedidosVC.tabBarItem = UITabBarItem(title: "Pedidos", image: UIImage(systemName: "cart.fill"), tag: 1)
             let nav2 = UINavigationController(rootViewController: pedidosVC)
-            
+
             let clientesVC = storyboard.instantiateViewController(identifier: "ReviewViewController") as! ReviewViewController
             clientesVC.tabBarItem = UITabBarItem(title: "Reseñas", image: UIImage(systemName: "person.2.fill"), tag: 2)
             let nav3 = UINavigationController(rootViewController: clientesVC)
-            
+
             let tabBarController = UITabBarController()
             tabBarController.viewControllers = [nav1, nav2, nav3]
             return tabBarController
         }
 
+        // MARK: - Helpers para cambiar root (animado)
+        func setRootViewController(_ vc: UIViewController, animated: Bool = true) {
+            guard let window = self.window else { return }
+
+            if !animated {
+                window.rootViewController = vc
+                window.makeKeyAndVisible()
+                return
+            }
+
+            // transición suave
+            UIView.transition(with: window, duration: 0.35, options: [.transitionCrossDissolve], animations: {
+                let oldState = UIView.areAnimationsEnabled
+                UIView.setAnimationsEnabled(false)
+                window.rootViewController = vc
+                UIView.setAnimationsEnabled(oldState)
+            }, completion: nil)
+        }
+
+        func showMainTabBar(animated: Bool = true) {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let tab = createTabBarController(storyboard: storyboard)
+            setRootViewController(tab, animated: animated)
+        }
+
+        func showLogin(animated: Bool = true) {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let loginVC = storyboard.instantiateViewController(identifier: "LoginViewController") as! LoginViewController
+            let navLogin = UINavigationController(rootViewController: loginVC)
+            setRootViewController(navLogin, animated: animated)
+        }
 
 
-    
+    // MARK: - life cycle
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         

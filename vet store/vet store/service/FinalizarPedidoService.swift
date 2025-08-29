@@ -9,6 +9,44 @@ class FinalizarPedidoService: NSObject {
         self.contextoBD = delegate.persistentContainer.viewContext
     }
     
+    // READ by codigo y opcional usuario_uuid
+    func getFinalizarPedido(byCodigo codigo: Int16, usuarioUuid: String? = nil) -> FinalizarPedido? {
+        let request = FinalizarPedidoEntity.fetchRequest()
+        
+        if let uuid = usuarioUuid {
+            // Usuario normal → codigo + uuid
+            request.predicate = NSPredicate(format: "codigo == %d AND usuario_uuid == %@", codigo, uuid)
+        } else {
+            // Administrador → solo por codigo
+            request.predicate = NSPredicate(format: "codigo == %d", codigo)
+        }
+        
+        do {
+            if let entity = try contextoBD.fetch(request).first {
+                return mapEntityToFinalizarPedido(entity)
+            }
+        } catch {
+            print("Error al buscar finalizar pedido: \(error.localizedDescription)")
+        }
+        return nil
+    }
+
+    
+    // READ by usuario_uuid
+    func getFinalizarPedidos(byUsuarioUuid uuid: String) -> [FinalizarPedido] {
+        let request = FinalizarPedidoEntity.fetchRequest()
+        request.predicate = NSPredicate(format: "usuario_uuid == %@", uuid)
+        
+        do {
+            let entities = try contextoBD.fetch(request)
+            return entities.map { mapEntityToFinalizarPedido($0) }
+        } catch {
+            print("Error al obtener pedidos del usuario: \(error.localizedDescription)")
+            return []
+        }
+    }
+
+    
     // CREATE
     func addFinalizarPedido(pedido: FinalizarPedido, detallePedido: DetallePedidoEntity?) -> Bool {
         let entity = FinalizarPedidoEntity(context: contextoBD)

@@ -18,6 +18,10 @@ class ModificarDatosViewController: UIViewController {
     @IBOutlet weak var txtFechaEntrega: UITextField!
     @IBOutlet weak var ivFoto: UIImageView!
     
+    
+    
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -26,12 +30,12 @@ class ModificarDatosViewController: UIViewController {
         txtDireccionUsuario.text = finalizarPedido.direccion
         txtFechaEntrega.text = finalizarPedido.fechaEntrega
         
-        if let url = URL(string: finalizarPedido.pedido?.mascota?.foto ?? "") {
-            ivFoto.sd_setImage(
-                with: url,
-                placeholderImage: UIImage(named: "producto_icon")
-            )
-        }
+        if let urlString = finalizarPedido?.pedido?.mascota?.foto,
+                  let url = URL(string: urlString) {
+                   ivFoto.sd_setImage(with: url, placeholderImage: UIImage(named: "producto_icon"))
+               } else {
+                   ivFoto.image = UIImage(named: "producto_icon")
+               }
         // Do any additional setup after loading the view.
     }
     
@@ -39,31 +43,66 @@ class ModificarDatosViewController: UIViewController {
     
     @IBAction func btnActualizar(_ sender: UIButton) {
         
-        // Actualizar objeto en memoria
-           finalizarPedido.nombreUsuario = obtenerNombreUsuario()
-           finalizarPedido.correoUsuario = obtenerCorreoUsuario()
-           finalizarPedido.direccion = obtenerDireccionUsuario()
-           finalizarPedido.fechaEntrega = obtenerFechaEntrega()
-           
-           // Llamar al service para guardar cambios
-           let service = FinalizarPedidoService()
-           let actualizado = service.updateFinalizarPedido(pedido: finalizarPedido)
-           
-           if actualizado {
-               print("✅ Pedido actualizado correctamente")
-               mostrarAlerta(mensaje: "Datos actualizados con éxito")
-               Routes.navigate(to: .modificarDatosAPedidos, from: self)
-           } else {
-               print("❌ Error al actualizar pedido")
-               mostrarAlerta(mensaje: "No se pudo actualizar el pedido")
-           }
-        
-    }
-    
-    func mostrarAlerta(mensaje: String) {
-        let alert = UIAlertController(title: "Aviso", message: mensaje, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        self.present(alert, animated: true)
+        // 0) Asegurarnos que venga el objeto
+               guard finalizarPedido != nil else {
+                   AlertHelper.showAlert(on: self, title: "Atención", message: "No hay pedido cargado para actualizar.")
+                   return
+               }
+               
+               // 1) Validar campos no vacíos (según tu petición)
+               let nombre = txtNombreUsuario.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+               let correo = txtCorreoUsuario.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+               let direccion = txtDireccionUsuario.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+               let fecha = txtFechaEntrega.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+               
+               if nombre.isEmpty {
+                   AlertHelper.showAlert(on: self, title: "Atención", message: "El nombre no puede estar vacío.")
+                   return
+               }
+               if correo.isEmpty {
+                   AlertHelper.showAlert(on: self, title: "Atención", message: "El correo no puede estar vacío.")
+                   return
+               }
+               if direccion.isEmpty {
+                   AlertHelper.showAlert(on: self, title: "Atención", message: "La dirección no puede estar vacía.")
+                   return
+               }
+               if fecha.isEmpty {
+                   AlertHelper.showAlert(on: self, title: "Atención", message: "La fecha de entrega no puede estar vacía.")
+                   return
+               }
+               
+               // 2) Confirmación antes de actualizar
+               AlertHelper.showConfirmation(on: self,
+                                            title: "Confirmación",
+                                            message: "¿Deseas actualizar los datos del pedido?",
+                                            confirmTitle: "Sí",
+                                            cancelTitle: "No") { [weak self] in
+                   guard let self = self else { return }
+                   
+                   // 3) Sobrescribir objeto en memoria
+                   self.finalizarPedido.nombreUsuario = nombre
+                   self.finalizarPedido.correoUsuario = correo
+                   self.finalizarPedido.direccion = direccion
+                   self.finalizarPedido.fechaEntrega = fecha
+                   
+                   // 4) Llamar al service para guardar cambios
+                   let service = FinalizarPedidoService()
+                   let actualizado = service.updateFinalizarPedido(pedido: self.finalizarPedido)
+                   
+                   // 5) Mostrar resultado y navegar de regreso si fue OK
+                   if actualizado {
+                       let alert = UIAlertController(title: "Éxito", message: "Datos actualizados correctamente.", preferredStyle: .alert)
+                       alert.addAction(UIAlertAction(title: "Aceptar", style: .default, handler: { _ in
+                           // Navegar de regreso a la lista (usa tu ruta)
+                           //Routes.navigate(to: .modificarDatosAPedidos, from: self)
+                           self.view.window?.rootViewController?.dismiss(animated: true)
+                       }))
+                       self.present(alert, animated: true)
+                   } else {
+                       AlertHelper.showAlert(on: self, title: "Error", message: "No se pudo actualizar el pedido. Intenta de nuevo.")
+                   }
+               }
     }
     
     func obtenerNombreUsuario() -> String {

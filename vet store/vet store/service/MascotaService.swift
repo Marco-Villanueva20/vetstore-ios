@@ -115,6 +115,31 @@ class MascotaService: NSObject {
         return nil
     }
     
+    func getMascotas(byRaza raza: String) -> [Mascota] {
+        var mascotas: [Mascota] = []
+        let request = MascotaEntity.fetchRequest()
+        // Filtro: que contenga la raza ingresada (case-insensitive)
+        request.predicate = NSPredicate(format: "raza CONTAINS[cd] %@", raza)
+        
+        do {
+            let entities = try contextoBD.fetch(request)
+            mascotas = entities.map { entity in
+                Mascota(
+                    codigo: entity.codigo,
+                    raza: entity.raza ?? "",
+                    precio: entity.precio,
+                    cantidadMachos: entity.cantidad_machos,
+                    cantidadHembras: entity.cantidad_hembras,
+                    foto: entity.foto ?? ""
+                )
+            }
+        } catch {
+            print("Error al obtener mascotas por raza: \(error.localizedDescription)")
+        }
+        
+        return mascotas
+    }
+    
     // UPDATE
     func updateMascota(mascota: Mascota) -> Bool {
         let request = MascotaEntity.fetchRequest()

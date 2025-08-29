@@ -1,10 +1,3 @@
-//
-//  HomeViewController.swift
-//  vet store
-//
-//  Created by Jacktter on 24/08/25.
-//
-
 import UIKit
 
 class HomeViewController: UIViewController,UITableViewDelegate,UITableViewDataSource  {
@@ -16,6 +9,13 @@ class HomeViewController: UIViewController,UITableViewDelegate,UITableViewDataSo
     var listaMascotas: [Mascota] = []
     var mascotaSeleccionada = -1
     
+    
+    @IBOutlet weak var txtRazaABuscar: UITextField!
+    
+    
+    
+    
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         cargarMascotas()
@@ -24,10 +24,15 @@ class HomeViewController: UIViewController,UITableViewDelegate,UITableViewDataSo
     
     
     @IBAction func btnCerrarSesion(_ sender: UIButton) {
-        Task{
-            await UsuarioService.cerrarSesion()
-            Routes.navigate(to: .homeALogin, from: self)
-        }
+        Task {
+              await UsuarioService.cerrarSesion()
+              await MainActor.run {
+                  if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                     let sceneDelegate = scene.delegate as? SceneDelegate {
+                      sceneDelegate.showLogin()
+                  }
+              }
+          }
     }
     
 
@@ -37,10 +42,17 @@ class HomeViewController: UIViewController,UITableViewDelegate,UITableViewDataSo
         Task {
             self.usuarioResponse = await UsuarioService.usuarioLogueado()
             print("Usuario cargado: \(self.usuarioResponse?.nombre ?? "Sin nombre")")
+            print(self.usuarioResponse ?? "H")
             
-            // 👇 Ya tengo el usuario, ahora sí imprimo la bienvenida
             await MainActor.run {
                 self.imprimirBienvenida()
+                
+                // 👇 Aquí validas el rol
+                if self.usuarioResponse?.rol.lowercased() == "administrador" {
+                    self.btnAgregarMascota.isHidden = false
+                } else {
+                    self.btnAgregarMascota.isHidden = true
+                }
             }
         }
         
@@ -49,11 +61,29 @@ class HomeViewController: UIViewController,UITableViewDelegate,UITableViewDataSo
         tvMascotas.rowHeight = 150
     }
 
+
     
     
     
     @IBAction func btnAgregarMascota(_ sender: UIButton) {
         Routes.navigate(to: .homeAAgregarMascota, from: self)
+    }
+    
+    
+    @IBAction func btnBuscarRazaIngresada(_ sender: UIButton) {
+        let texto = txtRazaABuscar.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+            let mascotaService = MascotaService()
+            
+            if texto.isEmpty {
+                // 👉 Si está vacío, listar todo
+                listaMascotas = mascotaService.getMascotas()
+            } else {
+                // 👉 Si hay texto, buscar por raza
+                listaMascotas = mascotaService.getMascotas(byRaza: texto)
+            }
+            
+            // Refrescar tabla (aunque esté vacía)
+            tvMascotas.reloadData()
     }
     
     
@@ -64,8 +94,8 @@ class HomeViewController: UIViewController,UITableViewDelegate,UITableViewDataSo
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let celda = tvMascotas.dequeueReusableCell(withIdentifier: "cardMascota") as! MascotaTableViewCell
     
-        celda.lblRaza.text = "\(listaMascotas[indexPath.row].raza)"
-        celda.lblPrecio.text = "\(listaMascotas[indexPath.row].precio)"
+        celda.lblRaza.text = "Raza: \(listaMascotas[indexPath.row].raza)"
+        celda.lblPrecio.text = "Precio: S/ \(listaMascotas[indexPath.row].precio)"
         
         if let url = URL(string: listaMascotas[indexPath.row].foto) {
             celda.ivFoto.sd_setImage(

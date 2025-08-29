@@ -68,51 +68,51 @@ class AgregarReviewViewController: UIViewController, UIImagePickerControllerDele
     
     
     @IBAction func btnAgregarReview(_ sender: UIButton) {
-        // 1️⃣ Validar que haya una imagen seleccionada
-               guard let imagen = ivFoto.image else {
-                   print("❌ Selecciona una foto antes de agregar.")
-                   return
-               }
-               
-               // 2️⃣ Validar comentario
-               guard let comentario = txtComentario.text, !comentario.isEmpty else {
-                   print("❌ Escribe un comentario.")
-                   return
-               }
-               
-               // 3️⃣ Obtener nombre de usuario desde la etiqueta
-               let nombreUsuario = lblNombreUsuario.text ?? "Anónimo"
-               
-               // 4️⃣ Subir la foto a Supabase
-               let fileName = "review_\(UUID().uuidString)"
-               reviewService.uploadFotoReview(fileName: fileName, image: imagen) { result in
-                   DispatchQueue.main.async {
-                       switch result {
-                       case .success(let urlFoto):
-                           print("✅ Foto subida. URL: \(urlFoto)")
-                           
-                           // 5️⃣ Crear objeto Review con URL de la foto
-                           let nuevaReview = Review(
-                               codigo: 0, // CoreData generará el código automáticamente
-                               nombre: nombreUsuario,
-                               comentario: comentario,
-                               foto: urlFoto
-                           )
-                           
-                           // 6️⃣ Guardar en Core Data
-                           let ok = self.reviewService.addReview(review: nuevaReview)
-                           if ok {
-                               print("✅ Review guardada en Core Data")
-                               self.dismiss(animated: true)
-                           } else {
-                               print("❌ Error al guardar review en Core Data")
-                           }
-                           
-                       case .failure(let error):
-                           print("❌ Error al subir foto: \(error.localizedDescription)")
-                       }
-                   }
-               }
+        // 1️⃣ Validar comentario obligatorio
+          guard let comentario = txtComentario.text, !comentario.isEmpty else {
+              AlertHelper.showAlert(on: self, title: "Error", message: "Por favor escribe un comentario.")
+              return
+          }
+          
+          // 2️⃣ Nombre del usuario
+          let nombreUsuario = lblNombreUsuario.text ?? "Anónimo"
+          
+          // 3️⃣ Verificar si hay foto seleccionada
+          if let imagen = ivFoto.image {
+              // Si hay foto → subirla primero
+              let fileName = "review_\(UUID().uuidString)"
+              reviewService.uploadFotoReview(fileName: fileName, image: imagen) { result in
+                  DispatchQueue.main.async {
+                      switch result {
+                      case .success(let urlFoto):
+                          print("✅ Foto subida. URL: \(urlFoto)")
+                          
+                          // Crear review con foto
+                          let nuevaReview = Review(
+                              codigo: 0,
+                              nombre: nombreUsuario,
+                              comentario: comentario,
+                              foto: urlFoto
+                          )
+                          
+                          self.guardarReview(nuevaReview)
+                          
+                      case .failure(let error):
+                          AlertHelper.showAlert(on: self, title: "Error", message: "Error al subir foto: \(error.localizedDescription)")
+                      }
+                  }
+              }
+          } else {
+              // Si NO hay foto → crear review sin URL de foto
+              let nuevaReview = Review(
+                  codigo: 0,
+                  nombre: nombreUsuario,
+                  comentario: comentario,
+                  foto: ""
+              )
+              
+              guardarReview(nuevaReview)
+          }
     }
     
     
@@ -121,16 +121,13 @@ class AgregarReviewViewController: UIViewController, UIImagePickerControllerDele
     }
     
     
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    private func guardarReview(_ review: Review) {
+        let ok = reviewService.addReview(review: review)
+        if ok {
+            AlertHelper.showSuccessAndDismiss(on: self, message: "Reseña agregada con éxito")
+        } else {
+            AlertHelper.showAlert(on: self, title: "Error", message: "No se pudo guardar la review.")
+        }
     }
-    */
 
 }

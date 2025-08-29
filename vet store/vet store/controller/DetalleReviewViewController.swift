@@ -21,6 +21,7 @@ class DetalleReviewViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         imprimirDatos()
+        
         // Do any additional setup after loading the view.
     }
     
@@ -36,4 +37,10 @@ class DetalleReviewViewController: UIViewController {
             
         }
     }
+    
+    @IBAction func btnVolver(_ sender: UIButton) {
+        dismiss(animated: true)
+    }
+    
+    
 }

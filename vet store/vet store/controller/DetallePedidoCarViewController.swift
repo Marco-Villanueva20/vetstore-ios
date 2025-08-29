@@ -57,43 +57,50 @@ class DetallePedidoCarViewController: UIViewController {
 
        
     @IBAction func btnRealizarPedido(_ sender: UIButton) {
-        // Validar datos antes de continuar
-            guard let cantidad = Int16(txtCantidadPedido.text ?? ""), cantidad > 0 else {
-                mostrarAlerta(mensaje: "Por favor ingresa una cantidad válida mayor a 0.")
-                return
-            }
-            
-            guard let genero = txtGeneroPedido.text, !genero.isEmpty else {
-                mostrarAlerta(mensaje: "Debes ingresar el género del pedido (Macho o Hembra).")
-                return
-            }
-            
-            // Validación opcional: solo permitir "Macho" o "Hembra"
-            let generoValido = ["Macho", "Hembra"]
-            guard generoValido.contains(genero.capitalized) else {
-                mostrarAlerta(mensaje: "El género debe ser 'Macho' o 'Hembra'.")
-                return
-            }
-            
-            detallePedido = DetallePedido(
-                cantidad: cantidad,
+        // 1️⃣ Validar cantidad (int > 0)
+        switch ValidationHelper.parseInt(txtCantidadPedido.text, nombreCampo: "Cantidad") {
+        case .failure(let error):
+            AlertHelper.showAlert(on: self, title: "Atención", message: error.mensaje)
+            return
+        case .success(let cantidadInt) where cantidadInt > 0:
+            break
+        default:
+            AlertHelper.showAlert(on: self, title: "Atención", message: "La cantidad debe ser mayor a 0.")
+            return
+        }
+        
+        // 2️⃣ Validar género (Macho/Hembra)
+        switch ValidationHelper.parseString(txtGeneroPedido.text, nombreCampo: "Género", valoresPermitidos: ["Macho", "Hembra"]) {
+        case .failure(let error):
+            AlertHelper.showAlert(on: self, title: "Atención", message: error.mensaje)
+            return
+        case .success(let generoValidado):
+            // 3️⃣ Construir DetallePedido provisional (con mascota actual)
+            let cantidadInt = Int(txtCantidadPedido.text ?? "0") ?? 0
+            let detalle = DetallePedido(
+                cantidad: Int16(cantidadInt),
                 precioTotal: obtenerPrecioTotal(),
-                genero: genero.capitalized,
+                genero: generoValidado,
                 mascota: mascota
             )
-        
-
-            if let pedidoCreado = DetallePedidoService().addPedido(pedido: detallePedido) {
-                print("Pedido creado con éxito: \(pedidoCreado)")
-                detallePedido = pedidoCreado
-                
-                // Navegar al siguiente paso: Finalizar Pedido
+            
+            // 4️⃣ Llamar al service (throws)
+            do {
+                let pedidoCreado = try DetallePedidoService().addPedido(pedido: detalle)
+                // éxito: actualizar referencia y navegar
+                self.detallePedido = pedidoCreado
                 Routes.navigate(to: .detallePedidoCarAFinalizarPedido, from: self)
-            } else {
-                print("Error al crear pedido")
-                mostrarAlerta(mensaje: "Hubo un error al registrar tu pedido. Inténtalo nuevamente.")
+                
+            } catch let error as PedidoError {
+                // error conocido con mensaje amigable
+                AlertHelper.showAlert(on: self, title: "Atención", message: error.mensaje)
+            } catch {
+                // error inesperado
+                AlertHelper.showAlert(on: self, title: "Atención", message: "Ocurrió un error inesperado.")
+                print("Error inesperado addPedido: \(error)")
             }
         }
+    }
     
 
         /// Función para mostrar alertas
